@@ -1,0 +1,121 @@
+/* Primary Colors */
+:root {
+    --primary-color: #F2E8CB; /* Beige */
+    --primary-light-color: #F9F2E0; /* Lighter shade of beige */
+    --primary-dark-color: #D9CFAF; /* Darker shade of beige */
+  }
+  
+  /* Secondary Colors */
+  :root {
+    --secondary-color: #EA5B3A; /* Orange */
+    --secondary-light-color: #F0947B;/* Lighter shade of orange */
+    --secondary-dark-color: #B64930; /* Darker shade of orange */
+  }
+  
+/* Accent Colors */
+:root {
+    --accent-color: #999999;  /* Grey */
+    --accent-light-color: #CCCCCC;  /* Lighter shade of grey */
+    --accent-dark-color: #666666;  /* Darker shade of grey */
+  }
+  
+  
+  body {
+    background-color: var(--primary-color);
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  .intro {
+    margin: 30px 0;
+    font-weight: bold;
+  }
+  
+  h1 {
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+  
+  p {
+    font-weight: 600;
+  }
+  
+  #first {
+    margin-top: 10px;
+    color: var(--accent-color);
+  }
+  
+  #second {
+    color: var(--secondary-color);
+  }
+  
+  #third {
+    color: #ffffff;
+    margin-bottom: 30px;
+  }
+  
+  #enter {
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    color: var(--primary-color);
+    background-color: var(--primary-dark-color);
+    transition: all 0.75s ease;
+    font-weight: normal;
+  }
+  
+  #enter:hover {
+    background-color: var(--secondary-light-color);
+    color: #ffffff;
+  }
+  
+  ul {
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  li {
+    list-style: none;
+    padding: 10px 20px;
+    color: #ffffff;
+    text-transform: capitalize;
+    font-weight: 600;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: var(--secondary-color);
+    transition: all 0.75s ease;
+  }
+  
+  li:hover {
+    background-color: var(--secondary-light-color);
+  }
+  
+  li > button {
+    font-weight: normal;
+    background-color: transparent;
+    border: none;
+    float: right;
+    color: var(--primary-color);
+    font-weight: 800;
+  }
+  
+  input {
+    border-radius: 5px;
+    min-width: 65%;
+    padding: 5px;
+    border: 2px solid var(--primary-dark-color);
+  }
+  
+  .done {
+    background-color: var(--accent-color) !important;
+    color: var(--accent-dark-color);
+    border: 2px solid var(--accent-dark-color);
+    text-decoration: line-through;
+  }
+  
+  .delete {
+    display: none;
+  }
+  
