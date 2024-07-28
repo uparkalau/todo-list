@@ -23,23 +23,60 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
   transition: background-color 0.3s, color 0.3s;
 }
 
-h1 {
+#themeSwitchContainer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.theme-toggle-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
   color: var(--accent-color);
-  text-transform: uppercase;
-  font-weight: 800;
-  margin-bottom: 20px;
+}
+
+.theme-toggle-btn:hover {
+  color: var(--accent-dark-color);
+}
+
+#menu {
+  width: 250px;
+  border-right: 1px solid var(--primary-dark-color);
+  padding: 10px;
+  background-color: var(--primary-color);
+}
+
+#taskListView {
+  flex-grow: 1;
+  padding: 10px;
+  display: none;
+}
+
+.task-list-tile, .search-result {
+  padding: 10px;
+  border: 1px solid var(--primary-dark-color);
+  margin-bottom: 5px;
+  cursor: pointer;
+  background-color: var(--accent-color);
+  color: var(--text-light-color);
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.task-list-tile:hover, .search-result:hover {
+  background-color: var(--accent-dark-color);
+  transform: scale(1.02);
 }
 
 input {
   border-radius: 5px;
-  width: 80%;
+  width: 100%;
   padding: 10px;
   border: 2px solid var(--primary-dark-color);
   margin-bottom: 10px;
@@ -67,22 +104,18 @@ button:hover {
   background-color: var(--accent-dark-color);
 }
 
-#themeToggle {
+#backToLists {
   background-color: transparent;
   color: var(--accent-color);
 }
 
-#themeToggle:hover {
+#backToLists:hover {
   background-color: transparent;
   color: var(--accent-dark-color);
 }
 
-#themeToggle i {
-  font-size: 24px;
-}
-
 #progressContainer {
-  width: 80%;
+  width: 100%;
   background-color: var(--primary-dark-color);
   border-radius: 5px;
   margin: 20px 0;
@@ -109,7 +142,7 @@ button:hover {
 ul {
   list-style: none;
   padding: 0;
-  width: 80%;
+  width: 100%;
 }
 
 li {
@@ -142,15 +175,11 @@ li.done {
 }
 
 .delete-btn:hover {
-  color: var(--accent-light-color);
+  color: var(--accent-dark-color);
 }
 
 @media (max-width: 600px) {
   input {
-    width: 90%;
-  }
-
-  ul {
     width: 90%;
   }
 }
