@@ -1,5 +1,6 @@
 class Task {
   constructor(text, done = false) {
+    this.id = Date.now(); // Unique ID based on timestamp
     this.text = text;
     this.done = done;
   }
@@ -15,19 +16,23 @@ class TaskList {
     this.saveTasks();
   }
 
-  deleteTask(index) {
-    this.tasks.splice(index, 1);
+  deleteTask(id) {
+    this.tasks = this.tasks.filter(task => task.id !== id);
     this.saveTasks();
   }
 
-  editTask(index, newText) {
-    this.tasks[index].text = newText;
-    this.saveTasks();
+  editTask(id, newText) {
+    const task = this.tasks.find(task => task.id === id);
+    if (task) {
+      task.text = newText;
+      this.saveTasks();
+    }
   }
 
-  toggleTaskDone(index) {
-    if (index >= 0 && index < this.tasks.length) {
-      this.tasks[index].done = !this.tasks[index].done;
+  toggleTaskDone(id) {
+    const task = this.tasks.find(task => task.id === id);
+    if (task) {
+      task.done = !task.done;
       this.saveTasks();
     }
   }
@@ -50,11 +55,13 @@ class TaskView {
     this.taskList = taskList;
     this.ul = document.getElementById("taskList");
     this.progressBar = document.getElementById("progressBar");
+    this.progressText = document.getElementById("progressText");
+    this.progressContainer = document.getElementById("progressContainer");
   }
 
   render() {
     this.ul.innerHTML = '';
-    this.taskList.getTasks().forEach((task, index) => {
+    this.taskList.getTasks().forEach(task => {
       const li = document.createElement("li");
       li.appendChild(document.createTextNode(task.text));
       if (task.done) {
@@ -62,34 +69,35 @@ class TaskView {
       }
       this.ul.appendChild(li);
 
-      li.addEventListener("click", () => this.toggleTaskDone(index));
-      li.addEventListener("dblclick", () => this.editTask(index));
-      this.addDeleteButton(li, index);
+      li.addEventListener("click", () => this.toggleTaskDone(task.id));
+      li.addEventListener("dblclick", () => this.editTask(task.id));
+      this.addDeleteButton(li, task.id);
     });
     this.updateProgressBar();
   }
 
-  addDeleteButton(li, index) {
+  addDeleteButton(li, id) {
     const dBtn = document.createElement("button");
-    dBtn.appendChild(document.createTextNode("X"));
+    dBtn.innerHTML = '<i class="bi bi-trash"></i>';
     dBtn.classList.add("delete-btn");
     li.appendChild(dBtn);
 
     dBtn.addEventListener("click", () => {
-      this.taskList.deleteTask(index);
+      this.taskList.deleteTask(id);
       this.render();
     });
   }
 
-  toggleTaskDone(index) {
-    this.taskList.toggleTaskDone(index);
+  toggleTaskDone(id) {
+    this.taskList.toggleTaskDone(id);
     this.render();
   }
 
-  editTask(index) {
-    const newText = prompt("Edit your task:", this.taskList.getTasks()[index].text);
+  editTask(id) {
+    const task = this.taskList.getTasks().find(task => task.id === id);
+    const newText = prompt("Edit your task:", task.text);
     if (newText) {
-      this.taskList.editTask(index, newText);
+      this.taskList.editTask(id, newText);
       this.render();
     }
   }
@@ -99,6 +107,13 @@ class TaskView {
     const completedTasks = this.taskList.getCompletedTasks();
     const progress = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
     this.progressBar.style.width = `${progress}%`;
+    this.progressText.textContent = `${Math.round(progress)}%`;
+
+    if (totalTasks === 0) {
+      this.progressContainer.style.display = 'none';
+    } else {
+      this.progressContainer.style.display = 'block';
+    }
   }
 }
 

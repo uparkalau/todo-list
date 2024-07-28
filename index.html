@@ -9,13 +9,14 @@
 </head>
 <body>
   <h1>Todo List</h1>
-  <input id="userInput" type="text" placeholder="Enter a task" aria-label="Task input">
-  <button id="enter" aria-label="Add task">Add</button>
-  <button id="themeToggle" aria-label="Toggle theme">
+  <input id="userInput" type="text" placeholder="Enter a task" aria-label="Task input" title="Type your task here">
+  <button id="enter" aria-label="Add task" title="Click to add task">Add</button>
+  <button id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark theme">
     <i id="themeIcon" class="bi bi-sun"></i>
   </button>
-  <div id="progressContainer">
+  <div id="progressContainer" style="display: none;">
     <div id="progressBar"></div>
+    <span id="progressText"></span>
   </div>
   <ul id="taskList"></ul>
 
