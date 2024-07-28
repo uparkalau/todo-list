@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Todo List</title>
-  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css?v=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
   <h1>Todo List</h1>
-  <input id="userInput" type="text" placeholder="Enter a task">
-  <button id="enter">Add</button>
-  <ul></ul>
+  <input id="userInput" type="text" placeholder="Enter a task" aria-label="Task input">
+  <button id="enter" aria-label="Add task">Add</button>
+  <button id="themeToggle" aria-label="Toggle theme">
+    <i id="themeIcon" class="bi bi-sun"></i>
+  </button>
+  <div id="progressContainer">
+    <div id="progressBar"></div>
+  </div>
+  <ul id="taskList"></ul>
 
   <script src="js/todo.js"></script>
+  <script src="js/comments.js"></script>
 </body>
 </html>
