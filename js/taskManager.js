@@ -1,10 +1,14 @@
 class TaskManager {
     constructor() {
         this.taskLists = JSON.parse(localStorage.getItem('taskLists')) || [];
+        this.nextTaskListId = 1;
+        for (const taskList of this.taskLists) {
+            this.nextTaskListId = Math.max(this.nextTaskListId, taskList.id + 1);
+        }
     }
 
     addTaskList(taskList) {
-        taskList.id = Date.now(); // Assign a unique ID based on timestamp
+        taskList.id = this.nextTaskListId++; 
         this.taskLists.push(taskList);
         this.saveTaskLists();
     }
@@ -15,8 +19,18 @@ class TaskManager {
     }
 
     getTaskLists() {
-        return this.taskLists;
-    }    
+        return this.taskLists.map(taskList => {
+            const tl = new TaskList(taskList.name);
+            tl.id = taskList.id;
+            tl.tasks = taskList.tasks.map(task => {
+                const t = new Task(task.text, task.done);
+                t.id = task.id;
+                t.created_date = new Date(task.created_date);
+                return t;
+            });
+            return tl;
+        });
+    }
 
     saveTaskLists() {
         localStorage.setItem('taskLists', JSON.stringify(this.taskLists));

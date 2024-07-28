@@ -2,7 +2,8 @@ class TodoApp {
     constructor() {
         this.taskManager = new TaskManager();
         this.taskList = null;
-        this.taskView = null;
+        this.taskView = new TaskView();
+
         this.enterButton = document.getElementById("enter");
         this.input = document.getElementById("userInput");
         this.createTaskListButton = document.getElementById("createTaskList");
@@ -12,7 +13,10 @@ class TodoApp {
         this.backToListsButton = document.getElementById("backToLists");
         this.themeToggle = document.getElementById("themeToggle");
         this.themeIcon = document.getElementById("themeIcon");
+        this.sortTasksByDateButton = document.getElementById("sortTasksByDate");
+        this.deleteCompletedTasksButton = document.getElementById("deleteCompletedTasks");
 
+        // Bind event listeners
         this.createTaskListButton.addEventListener("click", this.createTaskList.bind(this));
         this.searchInput.addEventListener("input", this.searchTasks.bind(this));
         this.backToListsButton.addEventListener("click", this.showTaskLists.bind(this));
@@ -20,25 +24,49 @@ class TodoApp {
         this.input.addEventListener("keypress", this.addTaskOnEnter.bind(this));
         this.themeToggle.addEventListener("click", this.toggleTheme.bind(this));
 
+        this.sortTasksByDateButton.addEventListener("click", () => {
+            if (this.taskList) {
+                this.taskList.sortTasksByDate();
+                this.taskView.render();
+            }
+        });
+
+        this.deleteCompletedTasksButton.addEventListener("click", () => {
+            if (this.taskList) {
+                this.taskList.deleteCompletedTasks();
+                this.taskView.render();
+            }
+        });
+
         this.loadTheme();
         this.showTaskLists();
+        this.editingTaskIndex = null;
+        this.editingTaskListId = null;
     }
 
     createTaskList() {
         const name = prompt("Enter the name of the new task list:");
-        if (name) {
-            const taskList = new TaskList(name);
+        const sanitizedName = sanitizeInput(name);
+        if (sanitizedName && sanitizedName.trim().length >= 3) {
+            const taskList = new TaskList(sanitizedName.trim());
             this.taskManager.addTaskList(taskList);
-            this.showTaskLists();
+            this.showTaskLists(); // Refresh the list of task lists
+        } else {
+            alert("Task list name must be at least 3 characters long.");
         }
     }
 
     showTaskLists() {
-        this.taskListsContainer.innerHTML = '';
-        this.taskListView.style.display = 'none';
-        this.taskListsContainer.style.display = 'block';
+        this.taskListsContainer.innerHTML = "";
+        this.taskListView.style.display = "none";
+        this.taskListsContainer.style.display = "block";
+        this.input.value = "";
+        this.input.placeholder = "New task list...";
 
-        this.taskManager.getTaskLists().forEach(taskList => {
+        // Fetch updated task lists from TaskManager
+        const taskLists = this.taskManager.getTaskLists();
+
+        taskLists.forEach(taskList => {
             const div = document.createElement("div");
             div.classList.add("task-list-tile");
             div.textContent = taskList.name;
@@ -48,26 +76,44 @@ class TodoApp {
     }
 
     showTaskList(id) {
-        const taskList = this.taskManager.getTaskLists().find(taskList => taskList.id === id);
-        if (taskList) {
-            console.log("Found Task List:", taskList);
-            this.taskList = taskList;
-            this.taskView = new TaskView(this.taskList);
-            this.taskListsContainer.style.display = 'none';
-            this.taskListView.style.display = 'block';
+        this.taskListsContainer.style.display = 'none';
+        this.taskListView.style.display = 'block';
+        this.input.placeholder = "New task...";
+
+        const taskLists = this.taskManager.getTaskLists();
+        this.taskList = taskLists.find(taskList => taskList.id === id);
+
+        if (this.taskList) {
+            this.taskView.updateTaskList(this.taskList);
             this.taskView.render();
         } else {
-            console.log("Task List not found");
+            console.error("Task List not found in local storage");
         }
     }
-    
 
     addTask() {
-        if (this.input.value.trim()) {
-            const task = new Task(this.input.value);
-            this.taskList.addTask(task);
-            this.input.value = '';
+        const taskName = this.input.value.trim();
+        const sanitizedTaskName = sanitizeInput(taskName);
+        if (sanitizedTaskName && sanitizedTaskName.length >= 3) {
+            if (this.editingTaskIndex !== null) {
+                this.taskList.editTask(this.editingTaskIndex, sanitizedTaskName);
+                this.editingTaskIndex = null;
+            } else {
+                if (this.taskList) {
+                    this.taskList.addTask(new Task(sanitizedTaskName));
+                } else {
+                    const newTaskList = new TaskList(sanitizedTaskName);
+                    this.taskManager.addTaskList(newTaskList);
+                    this.showTaskList(newTaskList.id); // Show the new task list
+                    return;
+                }
+            }
+
             this.taskView.render();
+            this.input.value = '';
+            this.input.placeholder = "New task...";
+        } else {
+            alert("Task name must be at least 3 characters long.");
         }
     }
 
@@ -85,7 +131,7 @@ class TodoApp {
         results.forEach(result => {
             const div = document.createElement("div");
             div.classList.add("search-result");
-            div.textContent = result.task ? `${result.taskList}: ${result.task}` : `${result.taskList}`;
+            div.textContent = result.task ? `${result.taskList}: ${sanitizeInput(result.task)}` : `${sanitizeInput(result.taskList)}`;
             div.addEventListener("click", () => {
                 const taskList = this.taskManager.getTaskLists().find(tl => tl.name === result.taskList);
                 if (taskList) {
@@ -114,5 +160,4 @@ class TodoApp {
     }
 }
 
-// Initialize the app
 new TodoApp();

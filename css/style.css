@@ -10,12 +10,13 @@
 
 /* Dark Theme Colors */
 body.dark-theme {
-  --primary-color: #333333; /* Dark Grey */
-  --primary-dark-color: #f5f5f5; /* Light Grey */
-  --text-color: #f5f5f5; /* Light Text */
-  --text-light-color: #333333; /* Dark Text */
+  --primary-color: #333333;
+  --primary-dark-color: #f5f5f5;
+  --text-color: #f5f5f5;
+  --text-light-color: #333333;
 }
 
+/* Basic Styles */
 body {
   background-color: var(--primary-color);
   color: var(--text-color);
@@ -101,7 +102,7 @@ button {
 }
 
 button:hover {
-  background-color: var(--accent-dark-color);
+  background-color: var(--accent-color);
 }
 
 #backToLists {
@@ -125,61 +126,120 @@ button:hover {
 #progressBar {
   width: 0;
   height: 20px;
-  background-color: var(--accent-color);
-  border-radius: 5px;
-  transition: width 0.3s;
-}
+  background-color: var(--accent-color); 
+  border-radius: 5px; 
+  transition: width 0.3s; 
+} 
 
 #progressText {
-  position: absolute;
-  top: 0;
+  position: absolute; 
+  top: 0; 
   left: 50%;
   transform: translateX(-50%);
-  color: var(--text-light-color);
+  color: var(--text-light-color); 
   font-weight: bold;
 }
 
+
+/* Task List Styles */
 ul {
   list-style: none;
   padding: 0;
   width: 100%;
 }
 
+/* Individual Task Items */
 li {
-  background-color: var(--accent-color);
-  color: var(--text-light-color);
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
   padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-bottom: 5px;
+  border: 1px solid var(--primary-dark-color);
+  border-radius: 5px; 
+  list-style: none; 
+  background-color: var(--primary-color); 
+  color: var(--text-color); 
   transition: background-color 0.3s, transform 0.3s;
   position: relative;
 }
 
 li:hover {
-  background-color: var(--accent-dark-color);
-  transform: scale(1.02);
+  background-color: var(--primary-dark-color); 
+  transform: scale(1.02); 
+  color: var(--text-light-color);
 }
 
 li.done {
-  background-color: var(--primary-dark-color);
+  background-color: var(--accent-color); 
   text-decoration: line-through;
 }
 
-.delete-btn {
-  color: var(--text-light-color);
+/* Task Date */
+.task-date {
+  font-size: 0.8em;
+  color: var(--accent-color); 
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+.task-text {
+  flex-grow: 1;  
+}
+
+/* Edit and Delete Buttons */
+.edit-btn, .delete-btn {
+  background: none; 
+  border: none;
   cursor: pointer;
   font-size: 1.2em;
+  margin-left: 5px;
 }
 
-.delete-btn:hover {
-  color: var(--accent-dark-color);
+.delete-btn {
+  color: var(--accent-ligth-color); 
 }
 
-@media (max-width: 600px) {
-  input {
-    width: 90%;
+.edit-btn {
+  color: var(--accent-color); 
+}
+
+/* Sort Button */
+#sortTasksByDate {
+  background-color: var(--accent-color); 
+  color: var(--text-light-color); 
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px; 
+  cursor: pointer;
+  font-size: 1em; 
+  font-weight: bold; 
+  transition: background-color 0.3s, box-shadow 0.3s; 
+  margin-bottom: 10px;
+  display: flex; 
+  align-items: center;
+  gap: 5px; 
+}
+
+#sortTasksByDate i {
+  font-size: 1.2em; 
+  color: var(--text-light-color);
+}
+
+#sortTasksByDate:hover, body.dark-theme #sortTasksByDate:hover { 
+  color: var(--text-light-color);
+}
+
+body.dark-theme #sortTasksByDate {
+  background-color: var(--primary-dark-color); 
+  color: var(--text-light-color);
+}
+
+@media (max-width: 768px) {
+  #sortTasksByDate {
+      font-size: 0.9em;
+      padding: 8px 12px;
   }
+
 }

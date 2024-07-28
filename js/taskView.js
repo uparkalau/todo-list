@@ -7,22 +7,61 @@ class TaskView {
         this.progressContainer = document.getElementById("progressContainer");
     }
 
+    updateTaskList(taskList) {
+        this.taskList = taskList;
+    }
+
     render() {
+        if (!this.taskList) return;
         this.ul.innerHTML = '';
         this.taskList.getTasks().forEach(task => {
             const li = document.createElement("li");
             const taskText = task.text.length > 30 ? task.text.substring(0, 30) + '...' : task.text;
             li.appendChild(document.createTextNode(taskText));
-            li.title = task.text; // Tooltip with full text
+            li.title = task.text;
             if (task.done) {
                 li.classList.add("done");
             }
             this.ul.appendChild(li);
 
-            li.addEventListener("click", () => this.toggleTaskDone(task.id));
-            li.addEventListener("dblclick", () => this.editTask(task.id));
+            let clickTimeout;
+
+            li.addEventListener("click", () => {
+                clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(() => {
+                    this.toggleTaskDone(task.id);
+                }, 300);
+            });
+
+            li.addEventListener("dblclick", (event) => {
+                clearTimeout(clickTimeout);
+                event.stopPropagation();
+                this.editTask(task.id);
+            });
+
+            const editButton = document.createElement("button");
+            editButton.classList.add('edit-btn');
+            editButton.innerHTML = '<i class="bi bi-pencil"></i>';
+            editButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                this.editTask(task.id);
+            });
+            li.appendChild(editButton);
+
+            const taskDateSpan = document.createElement("span");
+            taskDateSpan.classList.add("task-date");
+
+            if (task.created_date instanceof Date) {
+                taskDateSpan.textContent = task.created_date.toLocaleDateString();
+            } else {
+                taskDateSpan.textContent = "N/A"; 
+            }
+
+            li.insertBefore(taskDateSpan, li.firstChild);
+
             this.addDeleteButton(li, task.id);
         });
+
         this.updateProgressBar();
     }
 
@@ -43,13 +82,12 @@ class TaskView {
         this.render();
     }
 
-    editTask(id) {
-        const task = this.taskList.getTasks().find(task => task.id === id);
-        const newText = prompt("Edit your task:", task.text);
-        if (newText) {
-            this.taskList.editTask(id, newText);
-            this.render();
-        }
+    editTask(taskId) {
+        const task = this.taskList.getTasks().find(task => task.id === taskId);
+        app.input.value = task.text;
+        app.input.focus();
+        app.editingTaskIndex = taskId;
+        app.input.placeholder = "Edit task...";
     }
 
     updateProgressBar() {
@@ -65,5 +103,4 @@ class TaskView {
             this.progressContainer.style.display = 'block';
         }
     }
-    
 }
